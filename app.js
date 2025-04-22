@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import statusRoutes from './routes/statusRoutes.js';
+import assetRoutes from './routes/assetRoutes.js';
 dotenv.config(); // reading .env, will place content to the process.env
 
 const PORT = process.env.PORT;
@@ -18,3 +19,4 @@ mongoose.connect(MONGO_URI)
   .catch(err => console.error(err));
 
 app.use('/status', statusRoutes);
+app.use('/asset', assetRoutes);

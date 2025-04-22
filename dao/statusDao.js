@@ -12,3 +12,8 @@ export async function createStatuses() {
     await Status.insertMany(statusDocs);
 }
 
+//Display existing statuses
+export async function displayStatuses() {
+    return await Status.find();
+}
+
