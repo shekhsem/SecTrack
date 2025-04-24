@@ -1,26 +1,17 @@
 import { createAsset } from "../../dao/assetDao.js";
-import Status from '../../models/status.js';
 
 export async function handleCreateAsset(req, res) {
   try {
-    const { statusName, ...assetData } = req.body;
-
-    let status = null;
-    if (statusName) {
-      status = await Status.findOne({ name: statusName });
-      if (!status) {
-        return res.status(400).json({ error: `Статус "${statusName}" не найден` });
-      }
-    }
-
-    const newAsset = await createAsset({
-      ...assetData,
-      statusId: status ? status._id : undefined
-    });
-
+    const newAsset = await createAsset(req.body);
     res.status(201).json(newAsset);
   } catch (err) {
+    if (err.code === 'ASSET_EXISTS') {
+      res.status(400).json({ error: `Asset with such name already exists`})
+    }
+    if (err.code === 'STATUS_NOT_FOUND'){
+      res.status(400).json({ error: 'Status was not found'})
+    };
+    }
     console.error(err);
-    res.status(500).json({ error: 'Ошибка при создании ассета', details: err.message });
+    res.status(500).json({ error: 'Error while creating asset', details: err.message });
   }
-}
