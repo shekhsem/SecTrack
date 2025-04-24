@@ -8,7 +8,7 @@ export async function createAsset(assetData) {
 
 //List assets
 export async function displayAsset() {
-    return await Asset.find();
+    return await Asset.find().populate('statusId');
 }
 
 //Delete asset
@@ -18,6 +18,7 @@ export async function deleteAsset(assetName) {
 
 //Edit asset (doesnt work yet)
 export async function editAsset(assetData) {
-    const query = assetData.name;
-    return await Asset.findOneAndUpdate(query, assetData, {new: true})
+    const { name, ...updateData } = assetData;
+    const filter = { name };
+    return await Asset.findOneAndUpdate(filter, { $set: assetData}, {new: true})
 }
