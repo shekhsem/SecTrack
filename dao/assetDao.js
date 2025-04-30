@@ -1,5 +1,6 @@
 import Asset from '../models/asset.js';
 import Status from '../models/status.js';
+import PDFDocument from 'pdfkit';
 
 
 //Create asset
@@ -66,3 +67,21 @@ export async function editAsset(assetData) {
 
   return await asset.save();
 }
+
+//Generate PDF
+export function generateAssetPDF(assets, stream) {
+    const doc = new PDFDocument();
+  
+    doc.pipe(stream);
+  
+    doc.fontSize(16).text('Asset Report', { align: 'center' });
+    doc.moveDown();
+  
+    assets.forEach((asset, index) => {
+      doc.fontSize(12).text(
+        `${index + 1}. ${asset.name} - ${asset.ip} - ${asset.statusId?.name ?? 'N/A'}`
+      );
+    });
+  
+    doc.end();
+  }

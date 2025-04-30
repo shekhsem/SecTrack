@@ -1,5 +1,5 @@
 import { listAsset } from '../../dao/assetDao.js';
-import { generateAssetPDF } from '../../utils/pdfGenerator.js';
+import { generateAssetPDF } from '../../dao/assetDao.js';
 
 //nothing to validate
 
