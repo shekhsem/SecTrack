@@ -8,7 +8,7 @@ export async function createStatuses() {
     await Status.deleteMany({});
  
     //adding statuses
-    const statusDocs = statuses.map(name => new Status({name}));
+    const statusDocs = statuses.map(name => new Status({ name }));
     await Status.insertMany(statusDocs);
 }
 

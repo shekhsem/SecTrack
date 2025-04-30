@@ -1,8 +1,10 @@
-import { displayAsset } from '../../dao/assetDao.js';
+import { listAsset } from '../../dao/assetDao.js';
 
-export async function handleDisplayAsset(req, res) {
+//nothing to validate
+
+export async function handleListAsset(req, res) {
     try {
-        const assetList = await displayAsset();
+        const assetList = await listAsset();
         res.status(200).json(assetList);
     } catch (err) {
         res.status(500).json({ error: 'Error while getting asset list', details: err.message})

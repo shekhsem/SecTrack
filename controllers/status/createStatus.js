@@ -1,5 +1,7 @@
 import { createStatuses } from '../../dao/statusDao.js';
 
+//nothing to validate
+
 export async function handleCreateStatuses(req, res) {
     try {
         await createStatuses();

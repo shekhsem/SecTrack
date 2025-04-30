@@ -1,5 +1,7 @@
 import { displayStatuses } from '../../dao/statusDao.js';
 
+//nothing to validate
+
 export async function handleDisplayStatuses(req, res) {
     try {
         const statusList = await displayStatuses();

@@ -4,7 +4,7 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import statusRoutes from './routes/statusRoutes.js';
 import assetRoutes from './routes/assetRoutes.js';
-dotenv.config(); // reading .env, will place content to the process.env
+dotenv.config(); // reading .env, will place content into process.env
 
 const PORT = process.env.PORT;
 const MONGO_URI = process.env.MONGO_URI;

@@ -1,9 +1,11 @@
-import { displayAsset } from '../../dao/assetDao.js';
+import { listAsset } from '../../dao/assetDao.js';
 import { generateAssetPDF } from '../../utils/pdfGenerator.js';
+
+//nothing to validate
 
 export async function handleGeneratePdf(req, res) {
   try {
-    const assets = await displayAsset();
+    const assets = await listAsset();
 
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', 'attachment; filename=assets.pdf');
