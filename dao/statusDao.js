@@ -1,4 +1,5 @@
 import Status from "../models/status.js";
+import { formatStatus } from "../utils/statusDtoOut.js"
  
 //Create fixed statuses
 export async function createStatuses() {
@@ -14,6 +15,8 @@ export async function createStatuses() {
 
 //Display existing statuses
 export async function listStatuses() {
-    return await Status.find();
+    const statuses = await Status.find();
+    const dtoOut = statuses.map(formatStatus);
+    return dtoOut;
 }
 
