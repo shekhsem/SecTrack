@@ -1,5 +1,6 @@
 import Asset from '../models/asset.js';
 import Status from '../models/status.js';
+import { formatAsset } from '../utils/assetDtoOut.js';
 import PDFDocument from 'pdfkit';
 
 
@@ -27,17 +28,38 @@ export async function createAsset(assetData) {
       ...cleanData,
       statusId: status._id
     });
-    return await asset.save();
+    const dtoOut = formatAsset(await asset.save());
+    return dtoOut;
 }
 
 //List assets
 export async function listAsset() {
-    return await Asset.find().populate('statusId');
+  const assets = await Asset.find().populate('statusId');
+  const dtoOut = assets.map(formatAsset);
+  return dtoOut;
+}
+
+//List assets by StatusId
+export async function listAssetsByStatusId(statusId) {
+  const assets = await Asset.find({ statusId }).populate("statusId");
+  const dtoOut = assets.map(formatAsset);
+  return dtoOut;
+}
+
+//Get asset by id
+export async function getAsset(assetId) {
+  const asset = await Asset.findById(assetId).populate("statusId");
+  if (!asset) {
+    const error = new Error(`Asset with ID "${id}" doesn't exist`);
+    error.code = 'ASSET_NOT_EXISTS';
+    throw error;
+  };
+  return asset;
 }
 
 //Delete asset
 export async function deleteAsset(assetId) {
-    await Asset.deleteOne({ _id: assetId })
+  await Asset.deleteOne({ _id: assetId })
 };
 
 //Edit asset
