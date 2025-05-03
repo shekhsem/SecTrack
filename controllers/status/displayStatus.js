@@ -1,10 +1,10 @@
-import { displayStatuses } from '../../dao/statusDao.js';
+import { listStatuses } from '../../dao/statusDao.js';
 
 //nothing to validate
 
-export async function handleDisplayStatuses(req, res) {
+export async function handleListStatuses(req, res) {
     try {
-        const statusList = await displayStatuses();
+        const statusList = await listStatuses();
         res.status(200).json(statusList);
     } catch (err) {
         res.status(500).json({ error: 'An error ocured while getting status list'})

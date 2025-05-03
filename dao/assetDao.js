@@ -22,9 +22,20 @@ export async function createAsset(assetData) {
       throw error; 
     };
     
+    //setting defaults
+    const defaults = {
+      ip: null,
+      hostname: null,
+      software: null,
+      version: null,
+      online: false,
+      vulnerabilities: []
+    };
+
     //creating asset
     const { statusId, ...cleanData } = assetData;
     const asset = new Asset({
+      ...defaults,
       ...cleanData,
       statusId: status._id
     });

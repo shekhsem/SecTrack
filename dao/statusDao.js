@@ -13,7 +13,7 @@ export async function createStatuses() {
 }
 
 //Display existing statuses
-export async function displayStatuses() {
+export async function listStatuses() {
     return await Status.find();
 }
 
