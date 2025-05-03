@@ -4,8 +4,8 @@ import { createStatuses } from '../../dao/statusDao.js';
 
 export async function handleCreateStatuses(req, res) {
     try {
-        await createStatuses();
-        res.status(201).json({message: 'Statuses have been written to the database'});
+        const statuses = await createStatuses();
+        res.status(201).json(statuses);
     } catch (err) {
         res.status(500).json({error: 'Error while creating statuses', detailes: err.message})
     }

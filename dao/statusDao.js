@@ -11,6 +11,7 @@ export async function createStatuses() {
     //adding statuses
     const statusDocs = statuses.map(name => new Status({ name }));
     await Status.insertMany(statusDocs);
+    return listStatuses()
 }
 
 //Display existing statuses
@@ -19,4 +20,15 @@ export async function listStatuses() {
     const dtoOut = statuses.map(formatStatus);
     return dtoOut;
 }
+
+//Get status by id
+export async function getStatus(statusId) {
+    const status = await Status.findById(statusId)
+    if (!status) {
+      const error = new Error(`Status with ID doesn't exist`);
+      error.code = 'statusNotFound';
+      throw error;
+    };
+    return formatStatus(status);
+  }
 

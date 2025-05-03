@@ -27,11 +27,14 @@ const schema = {
 export async function handleCreateAsset(req, res) {
   try {
     //validating
-    const valid = ajv.validate(schema, req.body);
+    const validate = ajv.compile(schema);
+    const valid = validate(req.body);
+    
     if (!valid) {
-      return res.status(400).json({
-        error: "Validation error",
-        details: valid.errors.map(err => ({
+      return res.status(400).json({ 
+        code: "dtoInIsNotValid",
+        message: "Input validation error",
+        details: (validate.errors || []).map(err => ({
           field: err.instancePath.replace("/", ""),
           message: err.message
         }))
@@ -41,13 +44,25 @@ export async function handleCreateAsset(req, res) {
     const newAsset = await createAsset(req.body);
     res.status(201).json(newAsset);
   } catch (err) {
-    if (err.code === 'ASSET_EXISTS') {
-      res.status(400).json({ error: 'Asset with such name already exists', details: err.details})
-    };
-    if (err.code === 'STATUS_NOT_FOUND'){
-      res.status(400).json({ error: 'Status was not found', details: err.details})
-    };
-    console.error(err);
-    res.status(500).json({ error: 'Error while creating asset', details: err.details});
+      if (err.code === 'assetAlreadyExists') {
+        res.status(400).json({
+          code: err.code,
+          message: 'Asset with such name already exists', 
+          details: err.details
+        });
+      };
+      if (err.code === 'statusNotFound'){
+        res.status(400).json({
+          code: err.code, 
+          message: 'Status was not found',
+           details: err.details
+        });
+      };
+      console.error(err);
+      res.status(500).json({
+        code: "unknownError",
+        message: 'Error while creating asset', 
+        details: err.details
+      });
   }
 }

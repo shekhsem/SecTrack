@@ -27,29 +27,51 @@ const schema = {
 
 
 export async function handleEditAsset(req, res) {
-    //validating
-    const valid = ajv.validate(schema, req.body);
-    if (!valid) {
-    return res.status(400).json({
-        error: "Validation error",
-        details: valid.errors.map(err => ({
+  //validating
+  const validate = ajv.compile(schema);
+  const valid = validate(req.body);
+  
+  if (!valid) {
+    return res.status(400).json({ 
+      code: "dtoInIsNotValid",
+      message: "Input validation error",
+      details: (validate.errors || []).map(err => ({
         field: err.instancePath.replace("/", ""),
         message: err.message
-        }))
+      }))
     });
-    }
+  }
 
-    //editing
-    try {
-        const newAsset = await editAsset(req.body);
-        res.status(201).json(newAsset);
-    } catch (err) {
-        if (err.code === 'ASSET_NOT_EXISTS'){
-            res.status(400).json({ error: 'Asset with such name doesn\'t exists'})
-        }
-        if (err.code === 'ASSET_EXISTS') {
-            res.status(400).json({ error: 'Asset with such name already exists'})
-          }
-        res.status(500).json({error: 'Error while editing asset', details: err.message})
-    }
+  //editing
+  try {
+      const newAsset = await editAsset(req.body);
+      res.status(201).json(newAsset);
+  } catch (err) {
+      if (err.code === 'assetNotExists'){
+          res.status(400).json({ 
+            code: err.code,
+            message: 'Asset with such ID doesn\'t exist',
+            details: err.message
+          })
+      };
+      if (err.code === 'statusNotFound'){
+        res.status(400).json({
+          code: err.code,
+          error: 'Status was not found',
+          details: err.message
+        })
+      };
+      if (err.code === 'assetAlreadyExists') {
+          res.status(400).json({ 
+            code: err.code,
+            error: 'Asset with such name already exists',
+            details: err.message
+          })
+      };
+      res.status(500).json({
+        code: "unknownError",
+        error: 'Error while editing asset',
+        details: err.message
+      })
+  }
 }
